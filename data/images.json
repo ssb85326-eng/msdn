@@ -14,4 +14,35 @@
         "downloadUrl":  "http://dl.delivery.mp.microsoft.com/filestreamingservice/files/ad6e5e87-14da-4577-a9da-dd345685efe8/22000.318.211104-1236.co_release_svc_refresh_CLIENTCHINA_RET_x64FRE_zh-cn.esd",
         "source":  "WinNew API / Microsoft 瀹樻柟"
     },
+    {
+        "id":  "22000-318-211104-1236-co-release-svc-refresh-clientconsumer-ret-x64fre-pl-pl-esd",
+        "system":  "Windows 11",
+        "version":  "21H2",
+        "releaseDate":  "2021-11-04",
+        "build":  "22000.318",
+        "edition":  "consumer",
+        "language":  "Polish (Poland)",
+        "arch":  "x64",
+        "size":  "3.47 GB",
+        "hashType":  "SHA1",
+        "hash":  "cf5e498ceb9a56642feb69c1dcf4456896c33a89",
+        "downloadUrl":  "http://dl.delivery.mp.microsoft.com/filestreamingservice/files/8171cc7a-d8da-4005-ac20-e5df4ded13ab/22000.318.211104-1236.co_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_pl-pl.esd",
+        "source":  "WinNew API / Microsoft 瀹樻柟"
+    },
+    {
+        "id":  "22000-318-211104-1236-co-release-svc-refresh-clientconsumer-ret-x64fre-fr-fr-esd",
+        "system":  "Windows 11",
+        "version":  "21H2",
+        "releaseDate":  "2021-11-04",
+        "build":  "22000.318",
+        "edition":  "consumer",
+        "language":  "French (France)",
+        "arch":  "x64",
+        "size":  "3.56 GB",
+        "hashType":  "SHA1",
+        "hash":  "c2b7991b1b18954a33b381075e9635af00c77b87",
+        "downloadUrl":  "http://dl.delivery.mp.microsoft.com/filestreamingservice/files/1d2579aa-073d-4ab3-a172-63c30d7e69fe/22000.318.211104-1236.co_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_fr-fr.esd",
+        "source":  "WinNew API / Microsoft 瀹樻柟"
+    },
+
 ]

@@ -515,6 +515,18 @@ footer{
 @media(max-width:900px){.win-mirror-grid .query-row-primary{gap:12px!important}.win-mirror-grid .query-row-secondary{gap:12px!important}.win-mirror-grid .query-row-secondary .release-meta{gap:7px 12px!important}.win-mirror-grid .query-row-secondary .hash{flex:1!important}}
 @media(max-width:700px){.win-mirror-grid .query-row-primary,.win-mirror-grid .query-row-secondary{align-items:flex-start!important;flex-wrap:wrap!important}.win-mirror-grid .query-row-primary .release-card-top{flex-basis:100%!important}.win-mirror-grid .query-row-secondary .release-meta{flex-basis:100%!important;flex-wrap:wrap!important}.win-mirror-grid .query-row-secondary .hash{flex:1!important}.win-mirror-grid .query-row-secondary .card-actions{flex:0 0 auto!important}}
 </style>
+<style>
+.notice-overlay{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:20px;background:rgba(15,23,42,.42);backdrop-filter:blur(5px)}
+.notice-overlay[hidden]{display:none}
+.notice-dialog{width:min(480px,100%);background:var(--surface);border:1px solid var(--border-strong);border-radius:18px;box-shadow:0 24px 70px rgba(15,23,42,.24);overflow:hidden}
+.notice-head{display:flex;align-items:center;gap:12px;padding:20px 22px 14px;border-bottom:1px solid var(--border)}
+.notice-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:18px}
+.notice-head h2{margin:0;font-size:18px;font-weight:700;color:var(--text)}
+.notice-close{margin-left:auto;width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:var(--text-3);font-size:22px;line-height:1;cursor:pointer}.notice-close:hover{background:var(--surface-2);color:var(--text)}
+.notice-body{padding:20px 22px 22px;color:var(--text-2);font-size:14px;line-height:1.8}.notice-body p{margin:0 0 12px}.notice-body p:last-child{margin-bottom:0;color:var(--text-3);font-size:12px}
+.notice-footer{display:flex;justify-content:flex-end;gap:9px;padding:0 22px 20px}.notice-link,.notice-confirm{border-radius:8px;padding:9px 18px;font:600 13px 'Segoe UI','Microsoft YaHei',sans-serif;cursor:pointer}.notice-link{border:1px solid var(--border-strong);background:var(--surface);color:var(--text-2)}.notice-link:hover{background:var(--surface-2);color:var(--text)}.notice-confirm{border:0;background:var(--accent);color:#fff;padding-left:22px;padding-right:22px}.notice-confirm:hover{background:#075bb8}
+@media(max-width:600px){.notice-overlay{padding:14px}.notice-head{padding:17px 18px 13px}.notice-body{padding:17px 18px 19px}.notice-footer{padding:0 18px 18px}}
+</style>
 </head>
 <body>
 <div class="bg-decor"></div>
@@ -699,6 +711,13 @@ footer{
 
 <!-- ============ Toast ============ -->
 <div class="toasts" id="toasts"></div>
+<div class="notice-overlay" id="noticeOverlay" hidden>
+  <section class="notice-dialog" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+    <div class="notice-head"><div class="notice-mark">!</div><h2 id="noticeTitle">网站公告</h2><button class="notice-close" id="noticeClose" type="button" aria-label="关闭公告">&times;</button></div>
+    <div class="notice-body"><p>本站已更新 Windows 原版镜像数据，支持 Windows 10 和 Windows 11 多版本、多语言及多架构查询。</p><p>镜像下载地址来自官方分发渠道，下载前请核对 SHA1 或 SHA256 校验值。</p></div>
+    <div class="notice-footer"><a class="notice-link" id="noticeView" href="https://www.xmsdn.com/" target="_blank" rel="noreferrer">查看镜像</a><button class="notice-confirm" id="noticeConfirm" type="button">我知道了</button></div>
+  </section>
+</div>
 
 <script>
 /* =========================================================

@@ -8,9 +8,26 @@ const languageCode = (item) => { const match = String(item.downloadUrl || '').ma
 const languageAliases = {'arabic':'阿拉伯语','bulgarian':'保加利亚语','chinese simplified':'简体中文','chinese traditional tw':'繁体中文（台湾）','croatian':'克罗地亚语','czech':'捷克语','czech (czech republic)':'捷克语','danish':'丹麦语','dutch':'荷兰语','english':'英语（美国）','estonian':'爱沙尼亚语','finnish':'芬兰语','french':'法语（法国）','french - canada':'法语（加拿大）','german':'德语','greek':'希腊语','hebrew':'希伯来语','hungarian':'匈牙利语','italian':'意大利语','japanese':'日语','korean':'韩语','latvian':'拉脱维亚语','lithuanian':'立陶宛语','norwegian':'挪威语','norwegian bokmÃ¥l':'挪威语','norwegian bokmã¥l (norway)':'挪威语','polish':'波兰语','romanian':'罗马尼亚语','russian':'俄语','serbian latin':'塞尔维亚语','slovak':'斯洛伐克语','slovenian':'斯洛文尼亚语','spanish':'西班牙语（西班牙）','spanish - mexico':'西班牙语（墨西哥）','swedish':'瑞典语','thai':'泰语','turkish':'土耳其语','turkish (tÃ¼rkiye)':'土耳其语','ukrainian':'乌克兰语'};
 const languageLabel = (itemOrValue) => { const code = typeof itemOrValue === 'object' ? languageCode(itemOrValue) : String(itemOrValue).toLowerCase(); return languageNames[code] || languageAliases[code] || ({'Chinese (China)':'简体中文','Chinese (Simplified, China)':'简体中文','Chinese (Traditional, Taiwan)':'繁体中文（台湾）','English (United States)':'英语（美国）','English (United Kingdom)':'英语（英国）'}[itemOrValue] || '其他语言'); };
 const editionLabel = (value) => ({CoreCountrySpecific:'中国家庭版',consumer:'消费者版',enterprise:'企业版'}[value] || value);
+const NOTICE_STORAGE_KEY = 'winnew-notice-20261003';
+const NOTICE_INTERVAL_MS = 5 * 60 * 1000;
 const uniqueVersions = (system = '') => [...new Set(state.images.filter((item) => !system || item.system === system).map(versionLabel))].sort();
 const formatDate = (value) => { const date = new Date(value); return Number.isNaN(date.getTime()) ? String(value) : date.toISOString().slice(0, 10); };
 function showToast(message) { const toast = $('#toast'); toast.textContent = message; toast.classList.add('show'); window.setTimeout(() => toast.classList.remove('show'), 2200); }
+function initNotice() {
+  const overlay = $('#noticeOverlay');
+  if (!overlay) return;
+  let timer;
+  const show = () => { overlay.hidden = false; document.body.style.overflow = 'hidden'; };
+  const close = () => { overlay.hidden = true; document.body.style.overflow = ''; localStorage.setItem(NOTICE_STORAGE_KEY, String(Date.now())); timer = window.setTimeout(show, NOTICE_INTERVAL_MS); };
+  $('#noticeClose')?.addEventListener('click', close);
+  $('#noticeConfirm')?.addEventListener('click', close);
+  $('#noticeView')?.addEventListener('click', close);
+  overlay.addEventListener('click', (event) => { if (event.target === overlay) close(); });
+  const lastClosedAt = Number(localStorage.getItem(NOTICE_STORAGE_KEY));
+  const elapsed = Date.now() - (Number.isFinite(lastClosedAt) ? lastClosedAt : 0);
+  if (!lastClosedAt || elapsed >= NOTICE_INTERVAL_MS) show();
+  else timer = window.setTimeout(show, NOTICE_INTERVAL_MS - elapsed);
+}
 function cardMarkup(item, featured) {
   const className = featured ? 'release-card featured' : 'release-card';
   return '<article class="' + className + '"><div class="query-row query-row-primary"><div class="release-card-top"><span class="system-badge">' + escapeHtml(item.system + ' ' + item.version) + '</span><a class="edition-link" href="#filters">' + escapeHtml(editionLabel(item.edition)) + ' ↗</a></div><div class="release-date">' + escapeHtml(formatDate(item.releaseDate)) + '</div><h3>' + escapeHtml(versionLabel(item)) + '</h3></div><div class="query-row query-row-secondary"><div class="release-meta"><span>内部版本 <b>' + escapeHtml(item.build || '-') + '</b></span><span>大小 <b>' + escapeHtml(item.size) + '</b></span><span>语言 <b>' + escapeHtml(languageLabel(item)) + '</b></span><span>架构 <b>' + escapeHtml(item.arch) + '</b></span></div><div class="hash"><small>' + escapeHtml(item.hashType) + '</small><code>' + escapeHtml(item.hash) + '</code></div><div class="card-actions"><a class="download-button" href="' + escapeHtml(item.downloadUrl) + '" target="_blank" rel="noreferrer">立即下载 ↗</a><button class="copy-button" data-url="' + escapeHtml(item.downloadUrl) + '" type="button">复制直链</button></div></div></article>';
@@ -87,6 +104,5 @@ function initFilters() {
     render();
   });
 }
-async function init() { try { const stored = localStorage.getItem(DATA_STORAGE_KEY); state.images = stored ? JSON.parse(stored) : await (await fetch('data/images.json')).json(); initFilters(); const latest = ['Windows 11', 'Windows 10'].map((system) => state.images.filter((item) => item.system === system).sort(compareLatestImages)[0]).filter(Boolean); const latestGrid = $('#latest-grid'); if (latestGrid) { latestGrid.innerHTML = latest.map(latestCardMarkup).join(''); bindCopyButtons(); } render(); } catch { $('#results').innerHTML = '<div class="empty-state">数据加载失败，请通过本地服务器打开此网站。</div>'; } }
+async function init() { try { initNotice(); const stored = localStorage.getItem(DATA_STORAGE_KEY); state.images = stored ? JSON.parse(stored) : await (await fetch('data/images.json')).json(); initFilters(); const latest = ['Windows 11', 'Windows 10'].map((system) => state.images.filter((item) => item.system === system).sort(compareLatestImages)[0]).filter(Boolean); const latestGrid = $('#latest-grid'); if (latestGrid) { latestGrid.innerHTML = latest.map(latestCardMarkup).join(''); bindCopyButtons(); } render(); } catch { $('#results').innerHTML = '<div class="empty-state">数据加载失败，请通过本地服务器打开此网站。</div>'; } }
 init();
-
